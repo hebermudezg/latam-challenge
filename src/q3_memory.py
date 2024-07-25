@@ -22,18 +22,26 @@ def q3_memory(file_path: str) -> List[Tuple[str, int]]:
 
     # Función generadora para procesar el archivo línea por línea
     def tweet_generator(file_path): #iterador
-        with open(file_path, 'r') as file:
-            for line in file:
-                yield json.loads(line)
+        try:
+            with open(file_path, 'r') as file:
+                for line in file:
+                    yield json.loads(line)
+        except FileNotFoundError:
+            print(f"[ERROR] El archivo {file_path} no existe.")
+            raise
 
     # Usar el generador para procesar cada tweet
     for tweet in tweet_generator(file_path):
-        content = tweet['content']
-        mentions_in_tweet = extract_mentions(content)
-        for mention in mentions_in_tweet:
-            mention_counts[mention] += 1
+        try:
+            content = tweet['content']
+            mentions_in_tweet = extract_mentions(content)
+            for mention in mentions_in_tweet:
+                mention_counts[mention] += 1
+        except KeyError as e:
+            print(f"[WARNING] Error procesando el tweet: {e}")
 
     # Obtener los 10 usuarios más mencionados
     top_mentions = sorted(mention_counts.items(), key=lambda x: x[1], reverse=True)[:10]
 
+    print(f"[INFO] Procesamiento completado exitosamente")
     return top_mentions

@@ -17,19 +17,31 @@ def q3_time(file_path: str) -> List[Tuple[str, int]]:
     Retorna:
     List[Tuple[str, int]]: Una lista de tuplas donde cada tupla contiene un usuario (str) y su conteo de menciones (int).
     """
-    # Estructura para contar las menciones
-    mention_counts = defaultdict(int)
+    try:
+        print(f"[INFO] Iniciando procesamiento del archivo: {file_path}")
 
-    # Procesar el archivo línea por línea para minimizar el uso de memoria
-    with open(file_path, 'r') as file:
-        for line in file:
-            tweet = json.loads(line)
-            content = tweet['content']
-            mentions_in_tweet = extract_mentions(content)
-            for mention in mentions_in_tweet:
-                mention_counts[mention] += 1
+        # Estructura para contar las menciones
+        mention_counts = defaultdict(int)
 
-    # Obtener los 10 usuarios más mencionados
-    top_mentions = sorted(mention_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+        # Procesar el archivo línea por línea para minimizar el uso de memoria
+        with open(file_path, 'r') as file:
+            for line in file:
+                try:
+                    tweet = json.loads(line)
+                    content = tweet['content']
+                    mentions_in_tweet = extract_mentions(content)
+                    for mention in mentions_in_tweet:
+                        mention_counts[mention] += 1
+                except (json.JSONDecodeError, KeyError, ValueError) as e:
+                    print(f"[WARNING] Error procesando el tweet: {e}")
+                    continue
 
-    return top_mentions
+        # Obtener los 10 usuarios más mencionados
+        top_mentions = sorted(mention_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+
+        print(f"[INFO] Procesamiento completado exitosamente")
+        return top_mentions
+
+    except FileNotFoundError:
+        print(f"[ERROR] El archivo {file_path} no existe.")
+        return []
