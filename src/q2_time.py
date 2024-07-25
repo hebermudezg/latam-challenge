@@ -1,12 +1,9 @@
 from typing import List, Tuple
-from typing import List, Tuple
 from collections import defaultdict
 import json
-
-from memory_profiler import memory_usage
 import emoji
 
-def extract_emojis_from_text(text):
+def extract_emojis_from_text(text: str) -> List[str]:
     return [c for c in text if c in emoji.EMOJI_DATA]
 
 def q2_time(file_path: str) -> List[Tuple[str, int]]:
@@ -30,12 +27,16 @@ def q2_time(file_path: str) -> List[Tuple[str, int]]:
         with open(file_path, 'r') as file:
             for line in file:
                 try:
-                    tweet = json.loads(line)
-                    content = tweet['content']
-                    emojis_in_tweet = extract_emojis_from_text(content)
-                    for em in emojis_in_tweet:
-                        emoji_counts[em] += 1
+                    tweet = json.loads(line)  # Convertir la línea en un diccionario de Python
+                    content = tweet.get('content', '')  # Obtener el contenido del tweet, por defecto vacío si no existe
+                    if content is not None:
+                        # Extraer emojis del contenido del tweet
+                        emojis_in_tweet = extract_emojis_from_text(content)
+                        # Contar la frecuencia de cada emoji
+                        for em in emojis_in_tweet:
+                            emoji_counts[em] += 1
                 except (json.JSONDecodeError, KeyError, ValueError) as e:
+                    # Captura y registra cualquier error que ocurra durante el procesamiento del tweet
                     print(f"[WARNING] Error procesando el tweet: {e}")
                     continue
 
@@ -46,5 +47,6 @@ def q2_time(file_path: str) -> List[Tuple[str, int]]:
         return top_emojis
 
     except FileNotFoundError:
+        # Manejar el caso en que el archivo no exista
         print(f"[ERROR] El archivo {file_path} no existe.")
         return []

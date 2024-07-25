@@ -33,10 +33,11 @@ def q3_memory(file_path: str) -> List[Tuple[str, int]]:
     # Usar el generador para procesar cada tweet
     for tweet in tweet_generator(file_path):
         try:
-            content = tweet['content']
-            mentions_in_tweet = extract_mentions(content)
-            for mention in mentions_in_tweet:
-                mention_counts[mention] += 1
+            content = tweet.get('content', '')
+            if content is not None:
+                mentions_in_tweet = extract_mentions(content)
+                for mention in mentions_in_tweet:
+                    mention_counts[mention] += 1
         except KeyError as e:
             print(f"[WARNING] Error procesando el tweet: {e}")
 

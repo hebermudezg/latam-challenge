@@ -1,4 +1,3 @@
-
 from typing import List, Tuple
 from datetime import datetime
 from collections import defaultdict
@@ -24,10 +23,23 @@ def q1_time(file_path: str) -> List[Tuple[datetime.date, str, int]]:
         # Procesar el archivo línea por línea para minimizar el uso de memoria
         with open(file_path, 'r') as file:
             for line in file:
-                tweet = json.loads(line) # Convert to Python Dict
-                date = datetime.strptime(tweet['date'][:10], '%Y-%m-%d').date()
-                user = tweet['user']['username']
-                date_counts[date][user] += 1 # Incrementar para la fecha y usuario correspondiente
+                tweet = json.loads(line) # Convertir a diccionario de Python
+                try:
+                    # Extraer y validar la fecha del tweet
+                    date_str = tweet.get('date', None)
+                    if date_str:
+                        date = datetime.strptime(date_str[:10], '%Y-%m-%d').date()
+                    else:
+                        continue  # Saltar si no hay fecha
+
+                    # Extraer y validar el usuario del tweet
+                    user = tweet['user']['username'] if tweet['user'] and 'username' in tweet['user'] else None
+                    if user:
+                        date_counts[date][user] += 1  # Incrementar el conteo para la fecha y usuario correspondiente
+
+                except (KeyError, ValueError) as e:
+                    print(f"[WARNING] Error procesando el tweet: {e}")
+                    continue  # Saltar en caso de error de clave o valor
 
         # Obtener las 10 fechas con más tweets
         top_dates = sorted(date_counts.items(), key=lambda x: sum(x[1].values()), reverse=True)[:10] #x[1] conteos por usuario
@@ -41,4 +53,6 @@ def q1_time(file_path: str) -> List[Tuple[datetime.date, str, int]]:
     except FileNotFoundError:
         print(f"[ERROR] El archivo {file_path} no existe.")
         return []
+
+
 

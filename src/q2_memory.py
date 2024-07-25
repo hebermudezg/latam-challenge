@@ -34,10 +34,11 @@ def q2_memory(file_path: str) -> List[Tuple[str, int]]:
     # Usar el generador para procesar cada tweet
     for tweet in tweet_generator(file_path):
         try:
-            content = tweet['content']
-            emojis_in_tweet = extract_emojis_from_text(content)
-            for em in emojis_in_tweet:
-                emoji_counts[em] += 1
+            content = tweet.get('content', '')
+            if content is not None:
+                emojis_in_tweet = extract_emojis_from_text(content)
+                for em in emojis_in_tweet:
+                    emoji_counts[em] += 1
         except KeyError as e:
             print(f"[WARNING] Error procesando el tweet: {e}")
 

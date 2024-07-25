@@ -3,7 +3,7 @@ import re
 from collections import defaultdict
 import json
 
-def extract_mentions(s):
+def extract_mentions(s: str) -> List[str]:
     return re.findall(r'@\w+', s)
 
 def q3_time(file_path: str) -> List[Tuple[str, int]]:
@@ -27,12 +27,16 @@ def q3_time(file_path: str) -> List[Tuple[str, int]]:
         with open(file_path, 'r') as file:
             for line in file:
                 try:
-                    tweet = json.loads(line)
-                    content = tweet['content']
-                    mentions_in_tweet = extract_mentions(content)
-                    for mention in mentions_in_tweet:
-                        mention_counts[mention] += 1
+                    tweet = json.loads(line)  # Convertir la línea en un diccionario de Python
+                    content = tweet.get('content', '')  # Obtener el contenido del tweet, por defecto vacío si no existe
+                    if content is not None:
+                        # Extraer menciones del contenido del tweet
+                        mentions_in_tweet = extract_mentions(content)
+                        # Contar la frecuencia de cada mención
+                        for mention in mentions_in_tweet:
+                            mention_counts[mention] += 1
                 except (json.JSONDecodeError, KeyError, ValueError) as e:
+                    # Capturar y registrar cualquier error que ocurra durante el procesamiento del tweet
                     print(f"[WARNING] Error procesando el tweet: {e}")
                     continue
 
@@ -43,5 +47,6 @@ def q3_time(file_path: str) -> List[Tuple[str, int]]:
         return top_mentions
 
     except FileNotFoundError:
+        # Manejar el caso en que el archivo no exista
         print(f"[ERROR] El archivo {file_path} no existe.")
         return []

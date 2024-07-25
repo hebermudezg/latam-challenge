@@ -9,7 +9,7 @@ import emoji
 class TestQ2(unittest.TestCase):
     
     def setUp(self):
-        # Crear un archivo JSON temporal con algunos datos de prueba
+        # JSON temporal con algunos datos de prueba
         self.test_file = tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.json')
         tweets = [
             {"content": "Hello world 😊"},
@@ -20,7 +20,8 @@ class TestQ2(unittest.TestCase):
             {"content": "I love emojis 😊"},
             {"content": "Emojis are cool 😎"},
             {"content": "Testing is important 🧪"},
-            {"content": "Hello world 😊"}
+            {"content": "Hello world 😊"},
+            {"content": None}
         ]
         for tweet in tweets:
             self.test_file.write(json.dumps(tweet) + '\n')
@@ -93,6 +94,35 @@ class TestQ2(unittest.TestCase):
 
         # Comparar los conjuntos en lugar de las listas
         self.assertEqual(set(normalized_result), set(normalized_expected_result))
+
+    def test_missing_content(self):
+        # Crear un archivo JSON temporal con un tweet que tiene contenido faltante
+        with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.json') as temp_file:
+            tweets = [
+                {"content": "Hello world 😊"},
+                {"content": None},
+                {"content": "Data science is fun 📊"}
+            ]
+            for tweet in tweets:
+                temp_file.write(json.dumps(tweet) + '\n')
+        
+        # Llamar a la función con el archivo de prueba
+        result_time = q2_time(temp_file.name)
+        result_memory = q2_memory(temp_file.name)
+        
+        # Imprimir los resultados para depuración
+        print(result_time)
+        print(result_memory)
+        
+        # Verificar que la salida sea la esperada
+        expected_result = [
+            ('😊', 1),
+            ('📊', 1)
+        ]
+        
+        # Comparar los conjuntos en lugar de las listas
+        self.assertEqual(set(result_time), set(expected_result))
+        self.assertEqual(set(result_memory), set(expected_result))
 
 if __name__ == '__main__':
     unittest.main()
