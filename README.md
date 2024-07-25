@@ -1,8 +1,9 @@
 # Data Engineer Challenge
 
 
-## Estructura del Proyecto **
-La solución detallada del desafío se encuentra en el archivo `src/challenge.ipynb`. En este Jupyter Notebook, se explican detalladamente los pasos tomados para resolver los problemas, se ejecutan las funciones implementadas, y se miden tanto el tiempo de ejecución como el uso de memoria. También se incluyen explicaciones y comentarios sobre el código para facilitar su comprensión.
+## **Estructura del Proyecto**
+
+<span style="color: red;">La solución detallada del desafío se encuentra en el archivo `src/challenge.ipynb`. En este Jupyter Notebook, se explican detalladamente los pasos tomados para resolver los problemas, se ejecutan las funciones implementadas, y se miden tanto el tiempo de ejecución como el uso de memoria. También se incluyen explicaciones y comentarios sobre el código para facilitar su comprensión.</span>
 
 
 ​
