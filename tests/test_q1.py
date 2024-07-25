@@ -6,7 +6,7 @@ import tempfile
 import json
 import os
 
-class TestQ1Time(unittest.TestCase):
+class TestQ1(unittest.TestCase):
     
     def setUp(self):
         # Crear un archivo JSON temporal con algunos datos de prueba
