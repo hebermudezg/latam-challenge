@@ -1,7 +1,6 @@
 import unittest
 from src.q2_time import q2_time
 from src.q2_memory import q2_memory
-from datetime import datetime
 import tempfile
 import json
 import os
